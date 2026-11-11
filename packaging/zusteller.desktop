@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Zusteller
+Comment=Lightweight HTTP Client
+Exec=Zusteller
+Icon=zusteller
+Terminal=false
+Type=Application
+Categories=Development;Network;
