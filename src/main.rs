@@ -1,6 +1,7 @@
-mod app;
-mod requesting;
+mod api;
+mod ui;
 
+use crate::ui::app;
 use eframe::egui::{self};
 
 fn main() {
