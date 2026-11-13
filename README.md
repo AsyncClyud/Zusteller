@@ -9,7 +9,7 @@
 **Zusteller** is a high-performance, resource-efficient HTTP request client written in Rust. Designed for developers and testers who need a fast, lightweight tool for API interactions without unnecessary overhead.
 
 Key advantages:
-- **Instant startup** (0.5 seconds).
+- **Instant startup** (~0.4 seconds).
 - **Minimal footprint** (AppImage ~5 MB).
 - **Low resource consumption** (15 MB GPU memory, 50 MB RAM idle).
 - **Simple UI** built with `egui` for intuitive usability.
@@ -17,7 +17,7 @@ Key advantages:
 ---
 
 ### **Features**
-- Supports core HTTP methods: `GET`, `POST`, `PUT`, `DELETE`.
+- Supports core HTTP methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`.
 - Request body support for JSON, forms, and file uploads.
 - One-click response copying.
 - **Upcoming improvements**:
