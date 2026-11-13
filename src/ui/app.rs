@@ -1,11 +1,16 @@
-use crate::api::requesting;
+use crate::api::{headers, requesting};
 use eframe::egui::{self};
+use reqwest::header::HeaderMap;
 use std::sync::mpsc::Receiver;
 
 pub struct PostMan {
-    pub show_settings: bool,
+    show_settings: bool,
     pub adress: String,
     pub method: String,
+    pub headermap: HeaderMap,
+    pub header_key: String,
+    pub header_value: String,
+    pub header_message: String,
     pub body: String,
     pub client: reqwest::Client,
     pub response: String,
@@ -16,8 +21,12 @@ impl Default for PostMan {
     fn default() -> Self {
         Self {
             show_settings: false,
-            adress: String::from(""),
+            adress: String::from("https://httpbin.org/user-agent"),
             method: String::from("GET"),
+            headermap: HeaderMap::new(),
+            header_key: String::from("User-Agent"),
+            header_value: String::from("Zusteller/0.0.1"),
+            header_message: String::from(""),
             body: String::from(""),
             client: reqwest::Client::new(),
             response: String::from(""),
@@ -68,8 +77,32 @@ impl eframe::App for PostMan {
                         ui.selectable_value(&mut self.method, String::from("GET"), "GET");
                         ui.selectable_value(&mut self.method, String::from("POST"), "POST");
                         ui.selectable_value(&mut self.method, String::from("PUT"), "PUT");
+                        ui.selectable_value(&mut self.method, String::from("PATCH"), "PATCH");
                         ui.selectable_value(&mut self.method, String::from("DELETE"), "DELETE");
                     });
+                ui.add(egui::Label::new(
+                    egui::RichText::new("Headers").color(egui::Color32::WHITE),
+                ));
+                ui.add(
+                    egui::TextEdit::singleline(&mut self.header_key)
+                        .hint_text("Header key")
+                        .char_limit(32),
+                );
+                ui.add(
+                    egui::TextEdit::singleline(&mut self.header_value)
+                        .hint_text("Header value")
+                        .char_limit(128),
+                );
+                if ui
+                    .add(egui::Button::new("Add header").fill(egui::Color32::BLACK))
+                    .clicked()
+                {
+                    let _ = match headers::add_headers(self) {
+                        Ok(()) => self.header_message = String::from("Headers added successfully"),
+                        Err(error) => self.header_message = error,
+                    };
+                }
+                ui.add(egui::Label::new(egui::RichText::new(&self.header_message)));
                 ui.add(egui::Label::new(
                     egui::RichText::new("Body").color(egui::Color32::WHITE),
                 ));
@@ -107,7 +140,7 @@ impl eframe::App for PostMan {
                     .inner_margin(10.0)
                     .show(ui, |ui| {
                         egui::ScrollArea::vertical()
-                            .max_height(200.0)
+                            .max_height(100.0)
                             .auto_shrink([false, false])
                             .show(ui, |ui| {
                                 ui.add(
@@ -140,7 +173,7 @@ impl eframe::App for PostMan {
                                         .color(egui::Color32::WHITE)
                                         .strong(),
                                 );
-                                ui.label("No settings yet. ToDo: Make a storage checkbox;")
+                                ui.label("No settings yet. ToDo: Make a custom themes;")
                             })
                         });
                 }
