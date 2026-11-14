@@ -1,105 +1,126 @@
-<img width="340" height="340" alt="icon-1" src="https://github.com/user-attachments/assets/dacf4768-fc8e-4c37-8f55-ca694a12b420" />
+# Zusteller – A Lightweight Rust API Client
 
+## Description
 
-**Zusteller – A Lightweight Rust API Client**
+**Zusteller** is a lightweight desktop HTTP client written in Rust. It provides a simple and responsive interface for sending HTTP requests, inspecting server responses, and testing APIs without the overhead of larger API development tools.
 
----
+Built with Rust, `egui`, and `reqwest`, Zusteller focuses on low resource consumption, fast startup, and a straightforward user experience.
 
-### **Description**
-**Zusteller** is a high-performance, resource-efficient HTTP request client written in Rust. Designed for developers and testers who need a fast, lightweight tool for API interactions without unnecessary overhead.
+### Highlights
 
-Key advantages:
-- **Instant startup** (~0.4 seconds).
-- **Minimal footprint** (AppImage ~5 MB).
-- **Low resource consumption** (15 MB GPU memory, 50 MB RAM idle).
-- **Simple UI** built with `egui` for intuitive usability.
+- **Fast startup:** approximately 0.4 seconds on the tested system.
+- **Small distribution size:** AppImage approximately 5 MB.
+- **Low memory footprint:** approximately 49 MiB PSS / 62 MiB RSS when idle on the tested system.
+- **Native desktop UI:** built with `egui` using OpenGL rendering.
 
----
+## Features
 
-### **Features**
-- Supports core HTTP methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`.
-- Request body support for JSON, forms, and file uploads.
+- HTTP methods: `GET`, `POST`, `PUT`, `DELETE`.
+- Request body support for raw text and JSON.
+- Response viewing with scrolling.
 - One-click response copying.
-- **Upcoming improvements**:
-  - Custom HTTP headers.
-  - Customizable `User-Agent`.
-  - HTTP error documentation.
+- Custom HTTP headers *(in development)*.
+- Customizable `User-Agent` *(planned)*.
 
----
+### Planned Features
 
-### **Technical Stack**
-- **Backend**: `reqwest` (async HTTP requests) + `tokio` (runtime).
-- **Frontend**: `eframe` (desktop app framework) + `egui` (UI library).
-- **Rendering**: `glow` (OpenGL via WebAssembly, adapted for desktop).
-- **Distribution**: AppImage (Linux).
+- `PATCH` support.
+- Multipart form data and file uploads.
+- Customizable `User-Agent`.
+- Improved HTTP status-code information.
+- Request history and collections.
 
----
+## Technical Stack
 
-### **Requirements**
-- Rust (1.99.1 or later).
-- For AppImage builds: `linuxdeploy` and dependencies.
+- **Language:** Rust.
+- **HTTP Client:** `reqwest` (asynchronous HTTP requests).
+- **Async Runtime:** `tokio`.
+- **GUI Framework:** `eframe` + `egui`.
+- **Rendering:** `egui_glow` (native OpenGL).
+- **Distribution:** AppImage (Linux x86_64).
 
----
+## Requirements
 
-### **Installation**
-1. **Download the AppImage** (Linux) from the [Releases](https://github.com/AsyncClyud/Zusteller/releases) section.
+### Running
+
+- 64-bit Linux distribution.
+- Compatible graphics driver with OpenGL support.
+
+### Building from Source
+
+- Rust toolchain and Cargo.
+- `linuxdeploy` for AppImage packaging.
+
+## Installation
+
+1. Download the latest AppImage from the [Releases](https://github.com/AsyncClyud/Zusteller/releases) page.
 2. Make it executable:
+
    ```bash
    chmod +x Zusteller-x86_64.AppImage
    ```
-3. Run:
+
+3. Launch:
+
    ```bash
-   ./Zusteller-x86-64.AppImage
+   ./Zusteller-x86_64.AppImage
    ```
 
----
+## Project Structure
 
-### **Project Structure**
-```
+```text
 Zusteller/
 ├── src/
-│   ├── api/      # HTTP request logic
-│   ├── ui/       # egui-based interface
-│   └── main.rs   # Entry point
-├── Cargo.toml    # Dependencies and config
-└── README.md     # Documentation
+│   ├── api/
+│   ├── ui/
+│   └── main.rs
+├── assets/
+├── packaging/
+├── Cargo.toml
+├── Cargo.lock
+└── README.md
 ```
 
----
+## Roadmap
 
-### **Documentation**
-- [API Documentation](docs/api.md) *(in progress)*.
-- [Usage Guide](docs/usage.md) *(in progress)*.
+| Feature | Status |
+|---|---|
+| Basic HTTP methods | Implemented |
+| Request body | Implemented |
+| Response copying | Implemented |
+| Custom HTTP headers | In Development |
+| Customizable User-Agent | Planned |
+| PATCH support | Implemented |
+| File uploads | Planned |
+| Request history | Planned |
+| HTTP status-code documentation | Planned |
+| Windows/macOS support | Planned |
 
----
+## Contributing
 
-### **Roadmap**
-| Feature               | Status          | Notes                          |
-|-----------------------|-----------------|--------------------------------|
-| Custom Headers        | In Development  | Planned             |
-| User-Agent Customization | In Development | For now we have 'Zusteller/0.0.1' User-Agent            |
-| macOS/Windows Support | Planned         | After Linux stability           |
-| HTTP Error Docs       | Planned         | Post-core features              |
+Contributions are welcome!
 
----
+1. Fork the repository.
+2. Create a feature branch:
 
-### **Contributing**
-1. **Fork** the repository.
-2. **Create a branch** (`git checkout -b feature/your-feature`).
-3. **Commit changes** (`git commit -m 'Add feature X'`).
-4. **Open a Pull Request**.
+   ```bash
+   git checkout -b feature/your-feature
+   ```
 
-Before submitting a PR, ensure:
-- Code passes `cargo test`.
-- Documentation is updated.
-- Changes align with project style.
+3. Commit your changes:
 
----
+   ```bash
+   git commit -m "Add feature X"
+   ```
 
-### **License**
-This project is licensed under **Apache 2.0**. See [LICENSE](LICENSE) for details.
+4. Open a Pull Request.
 
----
-**Note**: Rust compiler is required for stable operation. macOS/Windows support will be added later.
+Before submitting a PR:
 
----
+- Run `cargo test`.
+- Update relevant documentation.
+- Follow the existing project structure and coding style.
+
+## License
+
+This project is licensed under the **Apache License 2.0**. See [LICENSE](LICENSE) for details.
