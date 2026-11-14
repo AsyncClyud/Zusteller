@@ -25,7 +25,7 @@ impl Default for PostMan {
             method: String::from("GET"),
             headermap: HeaderMap::new(),
             header_key: String::from("User-Agent"),
-            header_value: String::from("Zusteller/0.0.1"),
+            header_value: String::from("Zusteller/0.0.3"),
             header_message: String::from(""),
             body: String::from(""),
             client: reqwest::Client::new(),
@@ -98,11 +98,13 @@ impl eframe::App for PostMan {
                     .clicked()
                 {
                     let _ = match headers::add_headers(self) {
-                        Ok(()) => self.header_message = String::from("Headers added successfully"),
+                        Ok(()) => self.header_message = String::from("Header added successfully"),
                         Err(error) => self.header_message = error,
                     };
                 }
-                ui.add(egui::Label::new(egui::RichText::new(&self.header_message)));
+                ui.add(egui::Label::new(
+                    egui::RichText::new(&self.header_message).color(egui::Color32::WHITE),
+                ));
                 ui.add(egui::Label::new(
                     egui::RichText::new("Body").color(egui::Color32::WHITE),
                 ));
@@ -173,7 +175,7 @@ impl eframe::App for PostMan {
                                         .color(egui::Color32::WHITE)
                                         .strong(),
                                 );
-                                ui.label("No settings yet. ToDo: Make a custom themes;")
+                                ui.label("No settings yet. //ToDo: Make a custom themes;")
                             })
                         });
                 }
