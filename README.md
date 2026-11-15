@@ -24,7 +24,6 @@ Built with Rust, `egui`, and `reqwest`, Zusteller focuses on low resource consum
 
 ### Planned Features
 
-- `PATCH` support.
 - Multipart form data and file uploads.
 - Customizable `User-Agent`.
 - Improved HTTP status-code information.
