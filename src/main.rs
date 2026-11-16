@@ -12,7 +12,7 @@ fn main() {
         renderer: eframe::Renderer::Glow,
         viewport: egui::ViewportBuilder::default()
             .with_resizable(false)
-            .with_inner_size([800.0, 600.0])
+            .with_inner_size([900.0, 600.0])
             .with_icon(icon),
         centered: true,
         ..Default::default()
