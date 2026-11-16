@@ -18,9 +18,8 @@ Built with Rust, `egui`, and `reqwest`, Zusteller focuses on low resource consum
 - HTTP methods: `GET`, `POST`, `PUT`, `PATCH`, `DELETE`.
 - Request body support for raw text and JSON.
 - Response viewing with scrolling.
-- One-click response copying.
 - Custom HTTP headers *(in development)*.
-- Customizable `User-Agent` *(planned)*.
+- Customizable `User-Agent`.
 
 ### Planned Features
 
@@ -88,7 +87,7 @@ Zusteller/
 | Request body | Implemented |
 | Response copying | Implemented |
 | Custom HTTP headers | In Development |
-| Customizable User-Agent | Planned |
+| Customizable User-Agent | Implemented |
 | PATCH support | Implemented |
 | File uploads | Planned |
 | Request history | Planned |
