@@ -1,8 +1,10 @@
 use crate::ui::app;
 use reqwest::header::HeaderMap;
 
-use std::sync::mpsc::{self};
-use std::thread;
+use std::{
+    sync::mpsc::{self},
+    time::Duration,
+};
 
 pub fn requesting(requ: &mut app::PostMan) {
     requ.response = String::from("Waiting for response...");
@@ -15,56 +17,77 @@ pub fn requesting(requ: &mut app::PostMan) {
     let client = requ.client.clone();
 
     requ.receiver = Some(resp);
-    create_thread(adress, client, method, headers, body, req);
+    create_thread(
+        adress,
+        client,
+        requ.runtime.handle(),
+        method,
+        headers,
+        body,
+        req,
+    );
 }
 
 fn create_thread(
     adress: String,
     client: reqwest::Client,
+    runtime: &tokio::runtime::Handle,
     method: String,
     headers: HeaderMap,
     body: String,
     req: std::sync::mpsc::Sender<Result<String, String>>,
 ) {
-    thread::spawn(move || {
-        let result = match tokio::runtime::Runtime::new() {
-            Ok(runtime) => match method.as_str() {
-                "GET" => runtime
-                    .block_on(get(&client, adress, headers))
-                    .map_err(|e| e.to_string()),
-                "POST" => runtime
-                    .block_on(post(&client, adress, headers, body))
-                    .map_err(|e| e.to_string()),
-                "PUT" => runtime
-                    .block_on(put(&client, adress, headers, body))
-                    .map_err(|e| e.to_string()),
-                "PATCH" => runtime
-                    .block_on(patch(&client, adress, headers, body))
-                    .map_err(|e| e.to_string()),
-                "DELETE" => runtime
-                    .block_on(delete(&client, adress, headers, body))
-                    .map_err(|e| e.to_string()),
-                _ => Err(String::from("Invalid method!")),
-            },
-            Err(error) => Err(format!("Runtime error: {error}")),
+    runtime.spawn(async move {
+        let result = match method.as_str() {
+            "GET" => get(&client, adress, headers)
+                .await
+                .map_err(|e| e.to_string()),
+
+            "POST" => post(&client, adress, headers, body)
+                .await
+                .map_err(|e| e.to_string()),
+
+            "PUT" => put(&client, adress, headers, body)
+                .await
+                .map_err(|e| e.to_string()),
+
+            "PATCH" => patch(&client, adress, headers, body)
+                .await
+                .map_err(|e| e.to_string()),
+
+            "DELETE" => delete(&client, adress, headers, body)
+                .await
+                .map_err(|e| e.to_string()),
+
+            _ => Err("Invalid HTTP method!".into()),
         };
+
         let _ = req.send(result);
     });
+}
+
+fn format_request_error(error: reqwest::Error) -> String {
+    if error.is_timeout() {
+        "Timeout error".into()
+    } else {
+        format!("Request error: {error}")
+    }
 }
 
 async fn get(
     client: &reqwest::Client,
     adress: String,
     headers: HeaderMap,
-) -> Result<String, reqwest::Error> {
-    let answer = client
+) -> Result<String, String> {
+    let response = client
         .get(adress)
+        .timeout(Duration::from_secs(30))
         .headers(headers)
         .send()
-        .await?
-        .text()
-        .await?;
-    return Ok(answer);
+        .await
+        .map_err(format_request_error)?;
+    let body = response.text().await.map_err(format_request_error)?;
+    Ok(body)
 }
 
 async fn post(
@@ -72,16 +95,17 @@ async fn post(
     adress: String,
     headers: HeaderMap,
     body: String,
-) -> Result<String, reqwest::Error> {
-    let answer = client
+) -> Result<String, String> {
+    let response = client
         .post(adress)
         .body(body)
+        .timeout(Duration::from_secs(30))
         .headers(headers)
         .send()
-        .await?
-        .text()
-        .await?;
-    return Ok(answer);
+        .await
+        .map_err(format_request_error)?;
+    let body = response.text().await.map_err(format_request_error)?;
+    Ok(body)
 }
 
 async fn put(
@@ -89,16 +113,17 @@ async fn put(
     adress: String,
     headers: HeaderMap,
     body: String,
-) -> Result<String, reqwest::Error> {
-    let answer = client
+) -> Result<String, String> {
+    let response = client
         .put(adress)
         .body(body)
+        .timeout(Duration::from_secs(30))
         .headers(headers)
         .send()
-        .await?
-        .text()
-        .await?;
-    return Ok(answer);
+        .await
+        .map_err(format_request_error)?;
+    let body = response.text().await.map_err(format_request_error)?;
+    Ok(body)
 }
 
 async fn patch(
@@ -106,16 +131,17 @@ async fn patch(
     adress: String,
     headers: HeaderMap,
     body: String,
-) -> Result<String, reqwest::Error> {
-    let answer = client
+) -> Result<String, String> {
+    let response = client
         .patch(adress)
         .body(body)
+        .timeout(Duration::from_secs(30))
         .headers(headers)
         .send()
-        .await?
-        .text()
-        .await?;
-    return Ok(answer);
+        .await
+        .map_err(format_request_error)?;
+    let body = response.text().await.map_err(format_request_error)?;
+    Ok(body)
 }
 
 async fn delete(
@@ -123,14 +149,15 @@ async fn delete(
     adress: String,
     headers: HeaderMap,
     body: String,
-) -> Result<String, reqwest::Error> {
-    let answer = client
+) -> Result<String, String> {
+    let response = client
         .delete(adress)
-        .headers(headers)
         .body(body)
+        .timeout(Duration::from_secs(30))
+        .headers(headers)
         .send()
-        .await?
-        .text()
-        .await?;
-    return Ok(answer);
+        .await
+        .map_err(format_request_error)?;
+    let body = response.text().await.map_err(format_request_error)?;
+    Ok(body)
 }
