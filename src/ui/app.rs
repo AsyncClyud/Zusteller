@@ -5,6 +5,8 @@ use std::sync::mpsc::Receiver;
 
 pub struct PostMan {
     show_settings: bool,
+    //    show_header_builder: bool,
+    //   show_body_builder: bool,
     pub adress: String,
     pub method: String,
     pub headermap: HeaderMap,
@@ -22,6 +24,8 @@ impl Default for PostMan {
     fn default() -> Self {
         Self {
             show_settings: false,
+            //            show_header_builder: false,
+            //           show_body_builder: false,
             adress: String::from("https://httpbin.org/user-agent"),
             method: String::from("GET"),
             headermap: HeaderMap::new(),
@@ -56,8 +60,6 @@ impl eframe::App for PostMan {
             });
 
             request_builder::show_request_builder(ui, self);
-
-            ui.add_space(15.0);
             response::show_response(ui, self.response.clone());
             // Show settings window if show_settings argument is true
             if self.show_settings {
