@@ -1,4 +1,5 @@
 use eframe::egui;
+use rust_i18n::t;
 
 pub fn show_response(ui: &mut egui::Ui, response: String) {
     egui::Frame::new()
@@ -7,7 +8,7 @@ pub fn show_response(ui: &mut egui::Ui, response: String) {
         .shadow(egui::Shadow::default())
         .show(ui, |ui| {
             ui.add(egui::Label::new(
-                egui::RichText::new("Response").color(egui::Color32::WHITE),
+                egui::RichText::new(t!("response.title").to_string()).color(egui::Color32::WHITE),
             ));
             egui::Frame::new()
                 .fill(egui::Color32::BLACK)

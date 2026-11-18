@@ -4,6 +4,7 @@ use crate::ui::body_builder::show_body_builder;
 use crate::ui::header_builder::show_header_builder;
 use eframe::egui::vec2;
 use eframe::egui::{self};
+use rust_i18n::t;
 
 pub fn show_request_builder(ui: &mut egui::Ui, app: &mut app::PostMan) {
     egui::Frame::new()
@@ -30,13 +31,13 @@ pub fn show_request_builder(ui: &mut egui::Ui, app: &mut app::PostMan) {
                 )
             });
             ui.add(egui::Label::new(
-                egui::RichText::new("Headers").color(egui::Color32::WHITE),
+                egui::RichText::new(t!("headers.title").to_string()).color(egui::Color32::WHITE),
             ));
             show_header_builder(ui, app);
             show_body_builder(ui, app);
             if ui
                 .add(
-                    egui::Button::new("Send")
+                    egui::Button::new(t!("request.send").to_string())
                         .fill(egui::Color32::BLACK)
                         .min_size(vec2(30.0, 30.0)),
                 )

@@ -1,3 +1,5 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+rust_i18n::i18n!("locales", fallback = "en");
 mod api;
 mod ui;
 
@@ -5,6 +7,7 @@ use crate::ui::app;
 use eframe::egui::{self};
 
 fn main() {
+    rust_i18n::set_locale("en");
     let icon = eframe::icon_data::from_png_bytes(include_bytes!("../assets/icon.png"))
         .expect("Failed to load application icon");
 

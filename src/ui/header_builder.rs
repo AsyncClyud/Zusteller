@@ -3,32 +3,34 @@ use crate::{api::headers, ui::app::PostMan};
 
 use eframe::egui::vec2;
 use eframe::egui::{self};
+use rust_i18n::t;
 
 pub fn show_header_builder(ui: &mut egui::Ui, app: &mut PostMan) {
     ui.add(
         egui::TextEdit::singleline(&mut app.header_key)
             .desired_rows(2)
             .desired_width(465.0)
-            .hint_text("Header key")
+            .hint_text(t!("headers.name").to_string())
             .char_limit(32),
     );
     ui.add(
         egui::TextEdit::singleline(&mut app.header_value)
             .desired_rows(2)
             .desired_width(465.0)
-            .hint_text("Header value")
+            .hint_text(t!("headers.value").to_string())
             .char_limit(128),
     );
+    ui.add(egui::Label::new(app.header_message.clone()));
     if ui
         .add(
-            egui::Button::new("Add header")
+            egui::Button::new(t!("headers.add").to_string())
                 .fill(egui::Color32::BLACK)
                 .min_size(vec2(30.0, 30.0)),
         )
         .clicked()
     {
         let _ = match headers::add_headers(app) {
-            Ok(()) => app.header_message = String::from("Header added successfully"),
+            Ok(()) => app.header_message = t!("headers.message").to_string(),
             Err(error) => app.header_message = error,
         };
     }
@@ -38,9 +40,9 @@ pub fn show_header_builder(ui: &mut egui::Ui, app: &mut PostMan) {
 pub fn show_headers(ui: &mut egui::Ui, app: &mut PostMan) {
     egui::Frame::new().show(ui, |ui| {
         ui.horizontal(|ui| {
-            ui.heading("Request headers");
+            ui.heading(t!("headers.title").to_string());
             ui.small(format!("{} entries", app.headermap.len()));
-            if ui.button("Clear all headers").clicked() {
+            if ui.button(t!("headers.remove.all").to_string()).clicked() {
                 clear_headers(app)
             }
             ui.separator();
@@ -57,8 +59,8 @@ pub fn show_headers(ui: &mut egui::Ui, app: &mut PostMan) {
                     .striped(true)
                     .spacing([12.0, 7.0])
                     .show(ui, |ui| {
-                        ui.strong("Key");
-                        ui.strong("Value");
+                        ui.strong(t!("headers.name").to_string());
+                        ui.strong(t!("headers.value").to_string());
                         ui.end_row();
 
                         let headermap = &mut app.headermap;
@@ -67,7 +69,7 @@ pub fn show_headers(ui: &mut egui::Ui, app: &mut PostMan) {
                         for (key, value) in headermap.iter() {
                             ui.label(key.as_str());
                             ui.label(value.to_str().unwrap());
-                            if ui.button("Delete").clicked() {
+                            if ui.button(t!("headers.remove").to_string()).clicked() {
                                 header_to_remove = Some(key.as_str())
                             }
                             ui.end_row();

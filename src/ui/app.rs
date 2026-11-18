@@ -1,12 +1,16 @@
 use crate::ui::{request_builder, response, settings};
 use eframe::egui::{self};
 use reqwest::header::HeaderMap;
+use rust_i18n::t;
 use std::sync::mpsc::Receiver;
 
+// ToDo: make a storage
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct AppSettings {
+    pub language: String,
+}
+
 pub struct PostMan {
-    show_settings: bool,
-    //    show_header_builder: bool,
-    //   show_body_builder: bool,
     pub adress: String,
     pub method: String,
     pub headermap: HeaderMap,
@@ -14,6 +18,8 @@ pub struct PostMan {
     pub header_value: String,
     pub header_message: String,
     pub body: String,
+    pub settings: AppSettings,
+    pub show_settings: bool,
     pub runtime: tokio::runtime::Runtime,
     pub client: reqwest::Client,
     pub response: String,
@@ -23,16 +29,17 @@ pub struct PostMan {
 impl Default for PostMan {
     fn default() -> Self {
         Self {
-            show_settings: false,
-            //            show_header_builder: false,
-            //           show_body_builder: false,
-            adress: String::from("https://httpbin.org/user-agent"),
+            adress: String::from(""),
             method: String::from("GET"),
             headermap: HeaderMap::new(),
             header_key: String::from("User-Agent"),
-            header_value: String::from("Zusteller/0.1.0"),
+            header_value: String::from("Zusteller/0.5.0"),
             header_message: String::from(""),
             body: String::from(""),
+            settings: AppSettings {
+                language: String::from("en"),
+            },
+            show_settings: false,
             runtime: tokio::runtime::Builder::new_multi_thread()
                 .enable_all()
                 .worker_threads(2)
@@ -45,13 +52,24 @@ impl Default for PostMan {
     }
 }
 
+impl Default for AppSettings {
+    fn default() -> Self {
+        Self {
+            language: String::from("en"),
+        }
+    }
+}
+
 impl eframe::App for PostMan {
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ui, |ui| {
             egui::MenuBar::new().ui(ui, |ui| {
-                ui.menu_button("Settings", |ui| {
+                ui.menu_button(t!("settings.title").to_string(), |ui| {
                     if ui
-                        .add(egui::Button::new("Settings").fill(egui::Color32::BLACK))
+                        .add(
+                            egui::Button::new(t!("settings.title").to_string())
+                                .fill(egui::Color32::BLACK),
+                        )
                         .clicked()
                     {
                         self.show_settings = true;
@@ -63,7 +81,7 @@ impl eframe::App for PostMan {
             response::show_response(ui, self.response.clone());
             // Show settings window if show_settings argument is true
             if self.show_settings {
-                settings::show_settings_window(ui, &mut self.show_settings);
+                settings::show_settings_window(ui, self);
             }
         });
     }

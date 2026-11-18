@@ -1,5 +1,6 @@
 use crate::ui::app;
 use reqwest::header::HeaderMap;
+use rust_i18n::t;
 
 use std::{
     sync::mpsc::{self},
@@ -7,7 +8,7 @@ use std::{
 };
 
 pub fn requesting(requ: &mut app::PostMan) {
-    requ.response = String::from("Waiting for response...");
+    requ.response = t!("request.waiting").to_string();
 
     let (req, resp) = mpsc::channel();
     let adress = requ.adress.clone();
@@ -59,7 +60,7 @@ fn create_thread(
                 .await
                 .map_err(|e| e.to_string()),
 
-            _ => Err("Invalid HTTP method!".into()),
+            _ => Err(t!("errors.invalid_method").to_string().into()),
         };
 
         let _ = req.send(result);
@@ -68,9 +69,9 @@ fn create_thread(
 
 fn format_request_error(error: reqwest::Error) -> String {
     if error.is_timeout() {
-        "Timeout error".into()
+        t!("errors.timeout").to_string().into()
     } else {
-        format!("Request error: {error}")
+        t!("errors.timeout", error = error).to_string()
     }
 }
 
