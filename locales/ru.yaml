@@ -1,0 +1,28 @@
+_version: 1
+
+app.title: "Zusteller"
+
+menu.help: "Помощь"
+
+settings.title: "Настройки"
+settings.language: "Язык"
+
+request.title: "Запрос"
+request.url: "Введите URL..."
+request.body: "Тело запроса"
+request.send: "Отправить"
+request.waiting: "Ждем ответ от сервера..."
+
+headers.title: "Заголовки запроса"
+headers.name: "Название"
+headers.value: "Значение"
+headers.message: "Заголовок был успешно добавлен"
+headers.add: "Добавить заголовок"
+headers.remove: "Удалить"
+headers.remove.all: "Удалить все заголовки"
+
+response.title: "Ответ"
+
+errors.timeout: "Превышено время ожидания запроса."
+errors.network: "Ошибка сети: %{error}"
+errors.invalid_method: "Некорректный HTTP-метод."

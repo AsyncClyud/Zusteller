@@ -1,0 +1,27 @@
+_version: 1
+
+app.title: "Zusteller"
+
+menu.help: "Help"
+
+settings.title: "Settings"
+settings.language: "Language"
+
+request.title: "Request"
+request.url: "Enter URL..."
+request.body: "Request Body"
+request.send: "Send"
+request.waiting: "Waiting response from server..."
+
+headers.title: "Request Headers"
+headers.name: "Name"
+headers.value: "Value"
+headers.add: "Add Header"
+headers.message: "Header added successfully"
+headers.remove: "Remove"
+headers.remove.all: "Remove all headers"
+response.title: "Response"
+
+errors.timeout: "Request timed out."
+errors.network: "Network error"
+errors.invalid_method: "Invalid HTTP method."

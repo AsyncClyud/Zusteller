@@ -1,0 +1,28 @@
+_version: 1
+
+app.title: "Zusteller"
+
+menu.help: "Hilfe"
+
+settings.title: "Einstellungen"
+settings.language: "Sprache"
+
+request.title: "Anfrage"
+request.url: "URL eingeben..."
+request.body: "Request-Body"
+request.send: "Senden"
+request.waiting: "Warte auf eine Antwort vom Server..."
+
+headers.title: "Request-Header"
+headers.name: "Name"
+headers.value: "Wert"
+headers.message: "Header erfolgreich hinzugefügt."
+headers.add: "Header hinzufügen"
+headers.remove: "Entfernen"
+headers.remove.all: "Alle Header entfernen"
+
+response.title: "Antwort"
+
+errors.timeout: "Zeitüberschreitung bei der Anfrage."
+errors.network: "Netzwerkfehler: %{error}"
+errors.invalid_method: "Ungültige HTTP-Methode."
